@@ -1,0 +1,32 @@
+div
+  h1(x-large,class="sample-content") Calulate Max
+  label(class="center-block") name:&nbsp;&nbsp;
+    input(class="form-control",[formControl]=name)
+  form(
+    [formGroup]=formModel,
+    (ngSubmit)="onSubmit()"
+  )
+    div(formGroupName=scoutGroup)
+      label Scout Results&nbsp;&nbsp;
+      |gold:&nbsp;&nbsp;
+      input(
+        type="text",
+        [formControl]="gold"
+      )
+      |&nbsp;&nbsp;lumber:&nbsp;&nbsp;
+      input(type="text",[formControl]=lumber)
+      |&nbsp;&nbsp;rum:&nbsp;&nbsp;
+      input(type="text",[formControlName]=rum)
+    div(formGroupName=raidGroup)
+      label Raid Results&nbsp;&nbsp;
+      |gold:&nbsp;&nbsp;
+      input(type="text",[formControlName]=gold)
+      |&nbsp;&nbsp;lumber:&nbsp;&nbsp;
+      input(type="text",[formControlName]=lumber)
+      |&nbsp;&nbsp;rum:&nbsp;&nbsp;
+      input(type="text",[formControlName]=rum) 
+    label Max Total From Raid&nbsp;&nbsp;
+    input(type="text", [formControlName]=maxRaidTotal)
+    p
+      button(type="submit") Submit
+

@@ -1,0 +1,44 @@
+<div>
+  <h1 class="sample-content" x-large="x-large">Calulate Max</h1>
+  <form [formGroup]="formModel" *ngIf="active" (ngSubmit)="onSubmit()">
+    <div formGroupName="scoutGroup">
+      <label>Scout Results&nbsp;&nbsp;
+        <div class="form-group">
+          <label for='sgold'>gold</label>
+      <input type="number" id='sgold' class='form-control' formControlName='sgold' required />
+      <div *ngIf="formErrors.scoutGroup.sgold" class="alert alert-danger">
+        {{ formErrors.scoutGroup.sgold }}
+      </div>
+    </div>
+    <div class="form-group">
+      <label for=slumber>lumber</label>
+      <input type="number" formControlName="slumber" class='form-control' required/>
+      <div *ngIf="formErrors.scoutGroup.slumber" class="alert alert-danger">
+        {{ formErrors.scoutGroup.slumber }}
+      </div>      
+    </div>
+    <div class="form-group">
+      <label for=srum>rum</label>
+      <input type="number" formControlName="srum" pattern="/\d{1,7}/" required/>
+      <div *ngIf="formErrors.scoutGroup.srum" class="alert alert-danger">
+        {{ formErrors.scoutGroup.srum}}
+      </div>      
+    </div>
+    </label>
+</div>
+<div formGroupName="raidGroup">
+  <label>Raid Results&nbsp;&nbsp;
+        gold:&nbsp;&nbsp;
+        <input type="number" formControlName="gold" pattern="/\d{1,7}/" required/>&nbsp;&nbsp;lumber:&nbsp;&nbsp;
+        <input type="number" formControlName="lumber" pattern="/\d{1,7}/" required/>&nbsp;&nbsp;rum:&nbsp;&nbsp;
+        <input type="number" formControlName="rum" pattern="/\d{1,7}/" required/>
+  </label>
+</div>
+<label>Max Total From Raid&nbsp;&nbsp;
+      <input type="number" formControlName="maxRaidTotal" pattern="/\d{1,6}/" required/>
+</label>
+<p>
+  <button type="submit">Submit</button>
+</p>
+</form>
+</div>
