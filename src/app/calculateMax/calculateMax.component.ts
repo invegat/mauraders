@@ -3,33 +3,48 @@ import {
   ReactiveFormsModule, FormControl, FormBuilder,
   FormGroup, Validators
 } from '@angular/forms';
+//import { MdButtonModule, MdCheckboxModule } from '@angular/material';
+import { maxValueValidator } from './maxValueValidator';
 
 @Component({
   selector: 'calculateMax',
+  styleUrls: ['../../styles/styles.styl'],
   templateUrl: './calculateMax.component.html'
 })
 export class CalculateMaxComponent implements OnInit {
   public formModel: FormGroup;
   public submitted = false;
   public active = false;
+  public scoutIcon: string;
+  public pregex = new RegExp('^\\d{1,7}$');
+  public mregex = new RegExp('^\\d{1,6}$');
+  public pValidators = [Validators.required, Validators.pattern(this.pregex),
+      Validators.minLength(1), Validators.maxLength(7), maxValueValidator(1500000)];
+  public mValidators = [Validators.required, Validators.pattern(this.mregex),
+      Validators.minLength(1), Validators.maxLength(6), maxValueValidator(100000)];
   public formErrors = {
-    'scoutGroup.sgold': '',
-    'scoutGroup.slumber': '',
-    'scoutGroup.srum': '',
-    'raidGroup.gold': '',
-    'raidGroup.lumber': '',
-    'raidGroup.rum': '',
-    'maxRaidTotal': ''
+    sgold: '',
+    slumber: '',
+    srum: '',
+    gold: '',
+    lumber: '',
+    rum: '',
+    maxRaidTotal: ''
   };
   public validationMessages = {
-    name: {
-      required: 'Name is required.',
-      minlength: 'Name must be at least 4 characters long.',
-      maxlength: 'Name cannot be more than 24 characters long.',
-      forbiddenName: 'Someone named "Bob" cannot be a hero.'
+    resource: {
+      required: 'Is required.',
+      minlength: 'Must be at least 1 number long.',
+      maxlength: 'Cannot be more than 7 characters long.',
+      pattern: 'Must be numeric.',
+      Max_Exceeded: 'must be equal to or less than 1,500,000'
     },
-    power: {
-      required: 'Power is required.'
+    maxTotal: {
+      required: 'Is required.',
+      minlength: 'Must be at least 1 number long.',
+      maxlength: 'Cannot be more than 6 characters long.',
+      pattern: 'Must be numeric.',
+      Max_Exceeded: 'must be equal to or less than 100,000'
     }
   };
   constructor(private fb: FormBuilder) {
@@ -39,29 +54,20 @@ export class CalculateMaxComponent implements OnInit {
   public buildForm(): void {
     console.log('in buildForm');
     this.formModel = this.fb.group({
-      scoutGroup: this.fb.group({
-        sgold: ['', [Validators.required, Validators.pattern('/\d{1,7}/'),
-                 Validators.minLength(1), Validators.maxLength(7)]],
-        slumber: ['', [Validators.required, Validators.pattern('/\d{1,7}/')]],
-        srum: ['', [Validators.required, Validators.pattern('\d{1,7}')]]
-      }),
-      raidGroup: this.fb.group({
-        gold: ['', [Validators.required, Validators.pattern('/\d{1,7}/')]],
-        lumber: ['', [Validators.required, Validators.pattern('/\d{1,7}/')]],
-        rum: ['', [Validators.required, Validators.pattern('/\d{1,7}/')]]
-      }),
-      maxRaidTotal: [100000, [Validators.required, Validators.pattern('/\d{1,6}/')]]
+      sgold: ['', this.pValidators],
+      slumber: ['', this.pValidators],
+      srum: ['', this.pValidators],
+      gold: ['', this.pValidators],
+      lumber: ['', this.pValidators],
+      rum: ['', this.pValidators],
+      maxRaidTotal: [100000, this.mValidators]
     });
-    console.log('before subscibe');
     this.formModel.valueChanges
       .subscribe((data) => this.onValueChanged(data));
-    console.log('after subscibe');
     this.onValueChanged(); // (re)set validation messages now
-    console.log('after onValueChanged');
-
+    this.scoutIcon = '../../assets/icon/testSVG_1.svg';
   }
   public ngOnInit() {
-    console.log('calculateMax init');
     this.active = true;
     this.buildForm();
   }
@@ -75,16 +81,23 @@ export class CalculateMaxComponent implements OnInit {
     if (!this.formModel) { return; }
     const form = this.formModel;
     for (const field in this.formErrors) {
-      // console.log('formErrors field:',field);
+      if (field.length === 0) {
+        continue;
+      }
       // clear previous error message (if any)
-      // console.log('valueChanged data:', data);
       this.formErrors[field] = '';
       const control = form.get(field);
       if (control && control.dirty && !control.valid) {
-        // const messages = this.validationMessages[field];
+        const messages = this.validationMessages
+        [field === 'maxRaidTotal' ? 'maxTotal' : 'resource'];
         for (const key in control.errors) {
-          this.formErrors[field] += key + ' ';
-          console.log('errror key:', key);
+          if (messages[key]) {
+            this.formErrors[field] += messages[key] + ' ';
+            console.log('error field:', field);
+            console.log('error key:', key);
+            console.log('erro message:', messages[key]);
+            console.log('error formControl :', control);
+          }
         }
       }
     }

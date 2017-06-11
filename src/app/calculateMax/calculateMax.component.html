@@ -1,44 +1,65 @@
 <div>
   <h1 class="sample-content" x-large="x-large">Calulate Max</h1>
   <form [formGroup]="formModel" *ngIf="active" (ngSubmit)="onSubmit()">
-    <div formGroupName="scoutGroup">
+    <div>
       <label>Scout Results&nbsp;&nbsp;
         <div class="form-group">
           <label for='sgold'>gold</label>
-      <input type="number" id='sgold' class='form-control' formControlName='sgold' required />
-      <div *ngIf="formErrors.scoutGroup.sgold" class="alert alert-danger">
-        {{ formErrors.scoutGroup.sgold }}
+          <input type="string" id='sgold' class='form-control' formControlName='sgold' required />
+          <div *ngIf="formErrors.sgold" class="alert alert-danger">
+            {{ formErrors.sgold }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for=slumber>lumber</label>
+          <input type="string" id='slumber' class='form-control' formControlName='slumber' required />
+          <div *ngIf="formErrors.slumber" class="alert alert-danger">
+            {{ formErrors.slumber }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for=srum>rum</label>
+          <input type="string" id='srum' class='form-control' formControlName='srum' required />
+          <div *ngIf="formErrors.srum" class="alert alert-danger">
+            {{ formErrors.srum }}
+          </div>
+        </div>
+      </label>
+    </div>
+    <div>
+      <label>Raid Results&nbsp;&nbsp;
+        <div class="form-group">
+          <label for='gold'>gold</label>
+          <input type="string" id='gold' class='form-control' formControlName='gold' required />
+          <div *ngIf="formErrors.gold" class="alert alert-danger">
+            {{ formErrors.gold }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for=lumber>lumber</label>
+          <input type="string" id='lumber' class='form-control' formControlName='lumber' required />
+          <div *ngIf="formErrors.lumber" class="alert alert-danger">
+              {{ formErrors.lumber }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for=rum>rum</label>
+          <input type="string" id='rum' class='form-control' formControlName='rum' required />
+          <div *ngIf="formErrors.rum" class="alert alert-danger">
+            {{ formErrors.rum }}
+          </div>
+        </div>
+      </label>
+    </div>
+    <div class="form-group">
+      <label for='maxRaidTotal'>Max Total From Raid</label>
+      <input type="string" id='maxRaidTotal' class='form-control' formControlName="maxRaidTotal" required />
+      <div *ngIf="formErrors.maxRaidTotal" class="alert alert-danger">
+        {{ formErrors.maxRaidTotal }}
       </div>
-    </div>
-    <div class="form-group">
-      <label for=slumber>lumber</label>
-      <input type="number" formControlName="slumber" class='form-control' required/>
-      <div *ngIf="formErrors.scoutGroup.slumber" class="alert alert-danger">
-        {{ formErrors.scoutGroup.slumber }}
-      </div>      
-    </div>
-    <div class="form-group">
-      <label for=srum>rum</label>
-      <input type="number" formControlName="srum" pattern="/\d{1,7}/" required/>
-      <div *ngIf="formErrors.scoutGroup.srum" class="alert alert-danger">
-        {{ formErrors.scoutGroup.srum}}
-      </div>      
-    </div>
-    </label>
-</div>
-<div formGroupName="raidGroup">
-  <label>Raid Results&nbsp;&nbsp;
-        gold:&nbsp;&nbsp;
-        <input type="number" formControlName="gold" pattern="/\d{1,7}/" required/>&nbsp;&nbsp;lumber:&nbsp;&nbsp;
-        <input type="number" formControlName="lumber" pattern="/\d{1,7}/" required/>&nbsp;&nbsp;rum:&nbsp;&nbsp;
-        <input type="number" formControlName="rum" pattern="/\d{1,7}/" required/>
-  </label>
-</div>
-<label>Max Total From Raid&nbsp;&nbsp;
-      <input type="number" formControlName="maxRaidTotal" pattern="/\d{1,6}/" required/>
-</label>
-<p>
-  <button type="submit">Submit</button>
-</p>
-</form>
+    </div>    
+    <p>
+      <button type="submit">Submit</button>
+    </p>
+  </form>
 </div>
