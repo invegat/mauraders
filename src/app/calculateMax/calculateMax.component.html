@@ -1,5 +1,5 @@
 <div>
-  <h1 class="sample-content" x-large="x-large">Calulate Max</h1>
+  <h1 class="sample-content" x-large="x-large">Calculate Max Gold/Lumber</h1>
   <form [formGroup]="formModel" *ngIf="active" (ngSubmit)="onSubmit()">
     <div>
       <label>Scout Results&nbsp;&nbsp;
@@ -25,6 +25,17 @@
           </div>
         </div>
       </label>
+    </div>
+    <div>
+      <Label>Actual Max (if known)&nbsp;&nbsp;
+        <div class="form-group">
+          <label for='arum'>rum</label>
+          <input type="string" id='arum' class='form-control' formControlName='arum' required />
+          <div *ngIf="formErrors.arum" class="alert alert-danger">
+            {{ formErrors.sgold }}
+          </div>
+        </div>        
+      </Label>
     </div>
     <div>
       <label>Raid Results&nbsp;&nbsp;
@@ -58,6 +69,17 @@
         {{ formErrors.maxRaidTotal }}
       </div>
     </div>    
+    <div *ngIf="!anyFormErrors(true)" class='CalculatedOutput' >
+      <Label>Calculated Maximum&nbsp;&nbsp;
+        <div>
+          <label for='cGl'>Gold/Lumber</label>
+          <div id ='cGl'>
+            {{ cGl.toFixed(2) }}
+          </div>
+        </div>        
+      </Label>
+    </div>
+    
     <p>
       <button type="button" (click)="setGoodScout($event)" >
         {{ goodScout }}

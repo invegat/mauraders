@@ -9,7 +9,7 @@ import { INumberHash } from '../../utils/iDictionary';
 
 @Component({
   selector: 'calculateMax',
-  styleUrls: ['../../styles/styles.styl'],
+  styleUrls: ['../../styles/styles.styl', './calculateMax.component.styl'],
   templateUrl: './calculateMax.component.html'
 })
 export class CalculateMaxComponent implements OnInit {
@@ -24,8 +24,11 @@ export class CalculateMaxComponent implements OnInit {
   public mregex = new RegExp('^\\d{1,6}$');
   public pValidators = [Validators.required, Validators.pattern(this.pregex),
   Validators.minLength(1), Validators.maxLength(7), maxValueValidator(1500000)];
+  public oValidators = [Validators.pattern(this.pregex),
+  Validators.minLength(1), Validators.maxLength(7), maxValueValidator(1500000)];
   public mValidators = [Validators.required, Validators.pattern(this.mregex),
   Validators.minLength(1), Validators.maxLength(6), maxValueValidator(100000)];
+  public cGl: number = 0;
 
   public formErrors = {
     sgold: '',
@@ -60,26 +63,31 @@ A7 is raid gL
 A8 is raid rum
 B7 is scout gL
 B8 is scout rum
-A9 is max raid 
-
-
+A9 is max raid
   */
-  private calculateMax(r: [INumberHash]): number {
-    let useRum = (this.goodScout == this.useRum);
+  public calculateMax(r: [INumberHash]): number {
+    let useRum = (this.goodScout === this.useRum);
     let rv: number = 0;
 
     if (useRum) {
-// =(B7 * 2) - ((A9*(B8/2)/A8) - (B8/2))
-      let maxGl = Math.max(r['gold'],r['lumber']); // A7
-      let smaxGl = Math.max(r['sgold'],r['slumber']); // B7
-      rv = (smaxGl * 2) - ((r['maxRaidTotal'] * (r['srum']/2) / r['rum'])-(r['srum']/2)) 
+      // let maxGl = Math.max(r['gold'], r['lumber']); // A7
+      // let smaxGl = Math.max(r['sgold'], r['slumber']); // B7
+      let mrum = Math.max(r['arum'] ? r['arum'] : 0, r['srum']);  // C12
+// =((B2 - (2*(F2/(H2/(D2-(MAX(E2,D2)/2)))))) +
+// (C2 - (2*(G2/(H2/(D2-(MAX(E2,D2)/2)))))) + B2 + C2)/2
 
+      console.log('mrum:', mrum);
+      console.log('srum', r['srum']);
 
+      rv = ((r['sgold'] -   (2 * ((r['gold'])   / (r['rum'] / (r['srum'] - (mrum / 2)))))) +
+            (r['slumber'] - (2 * ((r['lumber']) / (r['rum'] / (r['srum'] - (mrum / 2)))))) +
+            r['sgold'] + r['slumber']) / 2;
     }
-    return 0;
+    // console.log('calculated cGL:', rv);
+    return rv;
   }
   public setGoodScout(event) {
-    this.goodScout = (this.goodScout == this.useRum) ? this.useGl : this.useRum;
+    this.goodScout = (this.goodScout === this.useRum) ? this.useGl : this.useRum;
   }
   public buildForm(): void {
     console.log('in buildForm');
@@ -87,11 +95,20 @@ A9 is max raid
       sgold: ['', this.pValidators],
       slumber: ['', this.pValidators],
       srum: ['', this.pValidators],
+      arum: ['', this.oValidators],
       gold: ['', this.pValidators],
       lumber: ['', this.pValidators],
       rum: ['', this.pValidators],
       maxRaidTotal: [100000, this.mValidators]
     });
+    /*
+    this.formModel.get('sgold').setValue(177362);
+    this.formModel.get('slumber').setValue(177362);
+    this.formModel.get('srum').setValue(220978);
+    this.formModel.get('gold').setValue(27380);
+    this.formModel.get('lumber').setValue(27380);
+    this.formModel.get('rum').setValue(45240);
+    */
     this.formModel.valueChanges
       .subscribe((data) => this.onValueChanged(data));
     this.onValueChanged(); // (re)set validation messages now
@@ -104,10 +121,11 @@ A9 is max raid
   public onSubmit() {
     this.submitted = true;
     let resources = this.onValueChanged(this.formModel);
+    this.cGl = this.calculateMax(resources);
     console.log('submit this.formModel.value', this.formModel.value);
     console.log('submit this.formModel.errors', this.formModel.errors);
   }
-  public anyFormErrors(): boolean {
+  public anyFormErrors(testgL: boolean = false): boolean {
     let resourceEntities: [INumberHash] = [{gold: 0}];
     if (!this.formModel) { return; }
     const form = this.formModel;
@@ -131,9 +149,13 @@ A9 is max raid
             !(useGold ? resourceEntities['sgold'] > 0 && resourceEntities['gold'] > 0 :
                         resourceEntities['slumber'] > 0 && resourceEntities['lumber'] > 0);
     // console.log('anyFormErrors returning:', rv);
+    if (testgL) {
+      rv = (this.cGl <= 0);
+     // console.log('testgL==true, cGl:', this.cGl);
+    }
     return rv;
   }
-  public onValueChanged(data?: any) : [INumberHash] {
+  public onValueChanged(data?: any): [INumberHash] {
     let resourceEntities: [INumberHash] = [{gold: 0}];
     if (!this.formModel) { return null; }
     const form = this.formModel;
@@ -156,9 +178,19 @@ A9 is max raid
             console.log('error formControl :', control);
           }
         }
-      }
-      else if (control) {
-      resourceEntities[field] = +control.value;
+      } else {
+        if (control) {
+          if (field === 'slumber' && resourceEntities['sgold'] > 0 && control.value.length === 0) {
+            control.setValue(resourceEntities['sgold'].toString());
+          }
+          if (field === 'lumber' && resourceEntities['gold'] > 0 && control.value.length === 0) {
+            control.setValue(resourceEntities['gold'].toString());
+          }          
+          resourceEntities[field] = +control.value;
+        }
+        if (control && control.dirty) {
+          this.cGl = 0;
+        }
       }
     }
     return resourceEntities;
