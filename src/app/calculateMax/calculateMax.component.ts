@@ -185,7 +185,7 @@ A9 is max raid
           }
           if (field === 'lumber' && resourceEntities['gold'] > 0 && control.value.length === 0) {
             control.setValue(resourceEntities['gold'].toString());
-          }          
+          }
           resourceEntities[field] = +control.value;
         }
         if (control && control.dirty) {
