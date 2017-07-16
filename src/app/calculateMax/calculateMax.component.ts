@@ -155,6 +155,17 @@ A9 is max raid
     }
     return rv;
   }
+  public onBlurMethod(target: string) {
+    console.log('target:', target);
+    if (target === 'sgold') {
+      let gold: number = this.formModel.get(target).value;
+      this.formModel.get('slumber').setValue(gold.toString());
+    }
+    if (target === 'gold') {
+      let gold: number = this.formModel.get(target).value;
+      this.formModel.get('lumber').setValue(gold.toString());
+    }
+  }
   public onValueChanged(data?: any): [INumberHash] {
     let resourceEntities: [INumberHash] = [{gold: 0}];
     if (!this.formModel) { return null; }
@@ -180,12 +191,14 @@ A9 is max raid
         }
       } else {
         if (control) {
+          /*
           if (field === 'slumber' && resourceEntities['sgold'] > 0 && control.value.length === 0) {
             control.setValue(resourceEntities['sgold'].toString());
           }
           if (field === 'lumber' && resourceEntities['gold'] > 0 && control.value.length === 0) {
             control.setValue(resourceEntities['gold'].toString());
           }
+          */
           resourceEntities[field] = +control.value;
         }
         if (control && control.dirty) {

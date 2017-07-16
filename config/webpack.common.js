@@ -27,7 +27,7 @@ const ngcWebpack = require('ngc-webpack');
 const HMR = helpers.hasProcessFlag('hot');
 const AOT = helpers.hasNpmFlag('aot');
 const METADATA = {
-  title: 'Mark Oliver ',
+  title: 'Buccs 3 ',
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer()
 };

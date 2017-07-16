@@ -5,7 +5,7 @@
       <label>Scout Results&nbsp;&nbsp;
         <div class="form-group">
           <label for='sgold'>gold</label>
-          <input type="string" id='sgold' class='form-control' formControlName='sgold' required />
+          <input type="string" id='sgold' (blur)="onBlurMethod($event.target.id)"   class='form-control' formControlName='sgold' required />
           <div *ngIf="formErrors.sgold" class="alert alert-danger">
             {{ formErrors.sgold }}
           </div>
@@ -41,7 +41,7 @@
       <label>Raid Results&nbsp;&nbsp;
         <div class="form-group">
           <label for='gold'>gold</label>
-          <input type="string" id='gold' class='form-control' formControlName='gold' required />
+          <input type="string" id='gold' (blur)="onBlurMethod($event.target.id)"  class='form-control' formControlName='gold' required />
           <div *ngIf="formErrors.gold" class="alert alert-danger">
             {{ formErrors.gold }}
           </div>
